@@ -1,0 +1,35 @@
+version: "3.3"
+services:
+
+    nginx:
+        build:
+            context: ./
+            dockerfile: nginx.dockerfile
+        ports:
+            - "8008:80"
+        volumes:
+            - ./web:/var/www/html/
+    app: 
+        build:
+            context: ./
+            dockerfile: app.dockerfile
+        volumes:
+            - ./web:/var/www/html/
+            - ./php_conf/php.ini:/usr/local/etc/php/php.ini:ro
+        environment:
+            - DB_DATABASE=finlogistics
+            - DB_USERNAME=finlogistics
+            - DB_PASSWORD=123456Aa@
+    db:
+        image: mariadb:10.2.8
+        ports:
+            - "6603:3306"
+        volumes:
+            - db-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: finlogistics
+            MYSQL_USER: finlogistics
+            MYSQL_PASSWORD: 123456Aa@
+volumes:
+    db-data:
